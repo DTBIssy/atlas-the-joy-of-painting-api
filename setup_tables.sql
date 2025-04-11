@@ -10,7 +10,7 @@ CREATE TABLE If NOT EXISTS colors (
     color_id INT PRIMARY KEY AUTO_INCREMENT,
     painting_id INT,
     color_hex TEXT,
-    color VARCHAR (255),
+    color TEXT,
     FOREIGN KEY(painting_id) REFERENCES paintings(painting_id)
 );
 

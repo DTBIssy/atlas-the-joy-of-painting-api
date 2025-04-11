@@ -12,7 +12,15 @@ const pool = mysql
   })
   .promise();
 
-export async function getPaintings(id) {
+export async function getPaintings() {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM paintings`
+  );
+  return rows;
+}
+export async function getPaintingById(id) {
   const [rows] = await pool.query(
     `
     SELECT *
@@ -38,7 +46,15 @@ export async function createPainting(painting_index, title, image_url) {
   }
 }
 
-export async function getEpisode(id) {
+export async function getEpisode() {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM episodes`
+  );
+  return rows;
+}
+export async function getEpisodeById(id) {
   const [rows] = await pool.query(
     `
     SELECT *
@@ -70,20 +86,37 @@ export async function createEpisodes(
   }
 }
 
+export async function getColors() {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM colors
+    `
+  );
+  return rows;
+}
+export async function getColorsById(id) {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+    FROM colors
+    WHERE painting_id = ?
+    `,
+    [id]
+  );
+  return rows[0];
+}
+
 export async function createColors(painting_id, color_hex, color) {
   try {
-    const results = [];
-    for (let colors of color) {
-      const result = pool.query(
-        `
+    const result = pool.query(
+      `
         INSERT INTO colors (painting_id, color_hex, color)
         VALUES (?, ?, ?)
         `,
-        [painting_id, color_hex, colors]
-      );
-      return results.push(result);
-    }
-    return results;
+      [painting_id, color_hex, color]
+    );
+    return result;
   } catch (error) {
     console.log(error);
   }
