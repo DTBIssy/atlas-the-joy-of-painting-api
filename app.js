@@ -8,8 +8,8 @@ import {
   getColors,
   getColorsById,
   createColors,
-  getBySeason,
-  getEntireShow,
+  getSeason,
+  getBySeasonBYSeason,
 } from "./database.js";
 
 import EPControl from "./controllers/Episode_Cont.js";
@@ -20,6 +20,16 @@ app.use(express.json());
 const port = 8080;
 
 //GETs
+
+app.get("/seasons", async (req, res) => {
+  const season = await getSeason();
+  res.send(season);
+});
+app.get("/seasons/:id", async (req, res) => {
+  const id = req.params.id;
+  const season = await getBySeasonBYSeason(id);
+  res.send(season);
+});
 
 app.get("/paintings", async (req, res) => {
   const paintings = await getPaintings();
@@ -40,6 +50,16 @@ app.get("/colors/:id", async (req, res) => {
   let id = req.params.id;
   let colors = await getColorsById(id);
   res.send(colors);
+});
+app.get("/episodes", async (req, res) => {
+  const paintings = await EPControl.getEpisode();
+  res.send(paintings);
+});
+
+app.get("/episodes/:id", async (req, res) => {
+  const id = req.params.id;
+  const painting = await EPControl.getEpisodeById(id);
+  res.send(painting);
 });
 
 //POSTs

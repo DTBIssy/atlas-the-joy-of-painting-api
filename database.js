@@ -46,34 +46,7 @@ export async function createPainting(painting_index, title, image_url) {
   }
 }
 
-export async function createFeature(feature_id, feature_name) {
-  try {
-    const [result] = await pool.query(
-      `INSERT INTO features (feature_id, feature_name) VALUES (?, ?)`,
-      [feature_id, feature_name]
-    );
-    return result.insertId;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function getPaintingId(title) {
-  const [rows] = await pool.query(
-    `SELECT painting_id FROM paintings WHERE LOWER(title) = ?`,
-    [title.toLowerCase()]
-  );
-  return rows.length ? rows[0].painting_id : null;
-}
-
-export async function linkPaintingFeature(paintingId, featureId, value) {
-  await pool.query(
-    `INSERT INTO painting_features (painting_id, feature_id, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)`,
-    [paintingId, featureId, value]
-  );
-}
-
-export async function getBySeason() {
+export async function getSeason() {
   const rows = await pool.query(
     `
     SELECT episodes.season ,episodes.episode, paintings.title, paintings.image_url, colors.color
@@ -83,6 +56,19 @@ export async function getBySeason() {
     LEFT JOIN colors
     ON episodes.painting_id = colors.painting_id
     `
+  );
+  return rows;
+}
+export async function getBySeasonBYSeason(id) {
+  const rows = await pool.query(
+    `
+    SELECT episodes.season, episodes.episode, paintings.title, paintings.image_url, colors.color
+    FROM episodes
+    LEFT JOIN paintings ON episodes.painting_id = paintings.painting_id
+    LEFT JOIN colors ON episodes.painting_id = colors.painting_id
+    WHERE episodes.season = ?
+    `,
+    [id]
   );
   return rows;
 }
@@ -143,11 +129,3 @@ export async function createColors(painting_id, color_hex, color) {
     console.log(error);
   }
 }
-
-export async function episodeBySeason(id) {}
-// const data = await createColors(
-//   1,
-//   "['#4E1500', '#DB0000', '#FFEC00', '#102E3C', '#021E44', '#0A3410', '#FFFFFF', '#221B15']",
-//   "['Alizarin Crimson', 'Bright Red', 'Cadmium Yellow', 'Phthalo Green\r\n', 'Prussian Blue', 'Sap Green', 'Titanium White', 'Van Dyke Brown']"
-// );
-// console.log(data);
