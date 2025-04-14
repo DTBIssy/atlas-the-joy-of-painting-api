@@ -2,15 +2,17 @@ import express from "express";
 
 import {
   getPaintings,
-  getEpisode,
-  getEpisodeById,
   getPaintingById,
   createPainting,
   createEpisodes,
   getColors,
   getColorsById,
   createColors,
+  getBySeason,
+  getEntireShow,
 } from "./database.js";
+
+import EPControl from "./controllers/Episode_Cont.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +20,7 @@ app.use(express.json());
 const port = 8080;
 
 //GETs
+
 app.get("/paintings", async (req, res) => {
   const paintings = await getPaintings();
   res.send(paintings);
@@ -26,17 +29,6 @@ app.get("/paintings", async (req, res) => {
 app.get("/paintings/:id", async (req, res) => {
   const id = req.params.id;
   const painting = await getPaintingById(id);
-  res.send(painting);
-});
-
-app.get("/episodes", async (req, res) => {
-  const paintings = await getEpisode();
-  res.send(paintings);
-});
-
-app.get("/episodes/:id", async (req, res) => {
-  const id = req.params.id;
-  const painting = await getEpisodeById(id);
   res.send(painting);
 });
 

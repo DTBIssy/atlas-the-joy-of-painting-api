@@ -1,3 +1,5 @@
-DROP TABLE episodes;
-DROP TABLE colors;
-DROP TABLE paintings;
+DROP TABLE IF EXISTS episodes;
+DROP TABLE IF EXISTS colors;
+DROP TABLE IF EXISTS painting_features;
+DROP TABLE IF EXISTS features;
+DROP TABLE IF EXISTS paintings;
